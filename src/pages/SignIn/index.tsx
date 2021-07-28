@@ -1,24 +1,25 @@
 import React, { MouseEvent } from 'react'
-import { Content } from './styles'
-import { CardSign } from '../../components/CardSing'
+import { Content, CardSignInAttr } from './styles'
 
 import { useHistory } from 'react-router-dom'
 
 import { api } from '../../services/api'
 import { login, isAuthenticated } from '../../services/auth'
+import AppGlobalContext from '../../services/context'
 
 interface formDataProps {
-   email: FormDataEntryValue | null
-   password: FormDataEntryValue | null
+   email: string
+   password: string
 }
 
 export const SignIn = () => {
+   const { sucessSingUp } = React.useContext(AppGlobalContext)
    const [formDataValues, setFormDataValues] = React.useState<formDataProps>({
       email: '',
       password: ''
    });
-   const [errorPassword, setErrorPassword] = React.useState<boolean>(false)
-   const [errorLogin, setErrorLogin] = React.useState<boolean>(false)
+   const [errorPassword, setErrorPassword] = React.useState(false)
+   const [errorLogin, setErrorLogin] = React.useState(false)
    const history = useHistory()
 
    React.useEffect(() => {
@@ -27,20 +28,15 @@ export const SignIn = () => {
 
    const handleSubmit = async (e: MouseEvent) => {
       e.preventDefault();
-      const formData = new FormData(e.target as HTMLFormElement);
       setErrorLogin(false)
       setErrorPassword(false)
 
-      if (!formData.get("password")) {
-         //&& (formData.get("password")?.length > 8)
+      if (formDataValues.password.length < 8) {
          setErrorPassword(true)
+         console.log('error')
       } else {
          setErrorPassword(false)
-         setFormDataValues({
-            ...formDataValues,
-            email: formData.get("email"),
-            password: formData.get("password")
-         });
+         console.log('login realizado com sucesso')
 
          try {
             const response = await api.post('users/login', formDataValues)
@@ -48,7 +44,6 @@ export const SignIn = () => {
             history.push('/home')
          } catch (e) {
             setErrorLogin(true)
-            console.log(e)
          }
       }
    };
@@ -59,16 +54,16 @@ export const SignIn = () => {
 
    return (
       <Content>
-         <CardSign
+         <CardSignInAttr
             submitForm={(e: MouseEvent) => handleSubmit(e)}
-            firstButton="Entrar"
-            secondButton="Cadastrar-se"
-            messageLogin="Não, possui cadastro?"
-            placeholderEmail="E-mail"
-            placeholderPassword="Senha"
+            valueInputEmail={formDataValues.email}
+            handleChangeInputEmail={(e) => setFormDataValues({ ...formDataValues, email: e.target.value })}
+            valueInputPassword={formDataValues.password}
+            handleChangeInputPassword={(e) => setFormDataValues({ ...formDataValues, password: e.target.value })}
             handleSecondButtonClick={redirect}
             passwordState={errorPassword}
             loginState={errorLogin}
+            isAccountCreate={sucessSingUp}
          />
       </Content>
    )

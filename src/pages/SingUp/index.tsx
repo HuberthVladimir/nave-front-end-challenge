@@ -1,48 +1,38 @@
 import React from 'react'
-import { Content } from './styles'
-import { CardSign } from '../../components/CardSing'
+import { Content, CardSignOutAttr } from './styles'
 import { useHistory } from 'react-router-dom'
 
-// import { api } from '../../services/api'
+import AppGlobalContext from '../../services/context'
+import { api } from '../../services/api'
 
 interface formDataProps {
-   email: FormDataEntryValue | null
-   password: FormDataEntryValue | null
+   email: string
+   password: string
 }
 
 export const SignUp = () => {
+   const { setSucessSignUp } = React.useContext(AppGlobalContext)
    const [formDataValues, setFormDataValues] = React.useState<formDataProps>({
       email: '',
       password: ''
    });
-   const [errorPasswordSignUp, setErrorPasswordSignUp] = React.useState<boolean>(false)
-   const [errorSignUp, setErrorSignUp] = React.useState<boolean>(false)
-   // const [sucessSignUp, setSucessSignUp] = React.useState<boolean>(false)
+   const [errorPasswordSignUp, setErrorPasswordSignUp] = React.useState(false)
+   const [errorSignUp, setErrorSignUp] = React.useState(false)
 
    const history = useHistory()
 
    const handleSubmit = async (e: MouseEvent) => {
       e.preventDefault();
-      const formData = new FormData(e.target as HTMLFormElement);
+      setErrorPasswordSignUp(false)
+      setErrorSignUp(false)
 
-      if (!formData.get("password")) {
+      if (formDataValues.password.length < 8) {
          setErrorPasswordSignUp(true)
-         console.log('senha invalida')
       } else {
-         console.log('conta cadastrada')
-         setErrorPasswordSignUp(false)
-         setErrorSignUp(false)
-         // setSucessSignUp(false)
-         setFormDataValues({
-            ...formDataValues,
-            email: formData.get("email"),
-            password: formData.get("password")
-         });
-
          try {
-            // const response = await api.post('users/signup', formDataValues)
+            await api.post('users/signup', formDataValues)
+            setSucessSignUp(true)
             history.push('/')
-            // setSucessSignUp(true)
          } catch {
             setErrorSignUp(true)
          }
@@ -54,13 +44,12 @@ export const SignUp = () => {
    }
    return (
       <Content>
-         <CardSign
+         <CardSignOutAttr
             submitForm={(e: MouseEvent) => handleSubmit(e)}
-            firstButton="Cadastrar-se"
-            secondButton="Fazer login"
-            messageLogin="Já, possui cadastro?"
-            placeholderEmail="Cadastre seu E-mail"
-            placeholderPassword="Cadastre sua senha"
+            valueInputEmail={formDataValues.email}
+            handleChangeInputEmail={(e) => setFormDataValues({ ...formDataValues, email: e.target.value })}
+            valueInputPassword={formDataValues.password}
+            handleChangeInputPassword={(e) => setFormDataValues({ ...formDataValues, password: e.target.value })}
             handleSecondButtonClick={redirect}
             signUpState={errorSignUp}
             passwordStateSignUp={errorPasswordSignUp}
