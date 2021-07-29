@@ -10,11 +10,11 @@ export const Container = styled.section`
    gap: 0.25rem;
 
    img {
+      height: 17.5rem;
+      width: 17.5rem;
       margin-bottom: 0.75rem;
       object-fit: cover;
       object-position: center top;
-      height: 17.5rem;
-      width: 17.5rem;
       filter: grayscale(1)
    }
 
