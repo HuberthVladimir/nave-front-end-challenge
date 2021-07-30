@@ -1,6 +1,12 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
+interface ContainerProps {
+   notificationModalattr?: boolean;
+   confirmModalattr?: boolean;
+   userModal?: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
    position: absolute;
    top: 0;
    left: 0;
@@ -9,12 +15,13 @@ export const Container = styled.div`
    height: 100%;
    width: 100%;
    background: #00000080;
-   display: flex;
+   display: ${props => props.notificationModalattr || props.confirmModalattr || props.userModal ? 'flex' : 'none'};
+   //display: flex;
    align-items: center;
    justify-content: center;
 
    .user {
-      display: flex;
+      display: ${props => props.userModal ? 'flex' : 'none'};
       max-height: 31.4375rem;
       max-width: 62.875rem;
       
@@ -72,7 +79,7 @@ export const Container = styled.div`
       height: 10rem;
       padding: 1rem 1.875rem 2rem 2rem;
       background: #FFF;
-      display: flex;
+      display: ${props => props.notificationModalattr ? 'flex' : 'none'};
       flex-direction: column;
       
       .closeButton {
@@ -100,7 +107,7 @@ export const Container = styled.div`
       height: 14.5625rem;
       padding: 2rem;
       background: #FFFFFF;
-      display: flex;
+      display: ${props => props.confirmModalattr ? 'flex' : 'none'};
       flex-direction: column;
       gap: 2.5rem;
 

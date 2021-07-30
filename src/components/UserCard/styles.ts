@@ -8,6 +8,7 @@ export const Container = styled.section`
    flex-wrap: wrap;
    flex-direction: column;
    gap: 0.25rem;
+   cursor: pointer;
 
    img {
       height: 17.5rem;
