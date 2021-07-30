@@ -1,6 +1,7 @@
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { SignIn } from './pages/SignIn'
 import { SignUp } from './pages/SingUp'
+import { EditUser } from './pages/EditUser'
 import { Home } from './pages/Home'
 import { isAuthenticated } from './services/auth'
 
@@ -23,7 +24,7 @@ const Routes = () => (
          <Route exact path="/" component={SignIn} />
          <Route path="/singup" component={SignUp} />
          <PrivateRoute path="/home" component={Home} />
-         <PrivateRoute path="/edit-user" component={() => <h1>xd</h1>} />
+         <PrivateRoute path="/edit-user" component={EditUser} />
       </Switch>
    </BrowserRouter>
 )
