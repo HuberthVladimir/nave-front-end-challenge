@@ -1,8 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { isAuthenticated } from '../../services/auth'
-
 import { Container } from './styles'
 import { Header } from '../../components/Header/index'
 import { Button } from '../../components/Button'
@@ -15,11 +13,6 @@ export function Home() {
    const history = useHistory()
    const { setConfirmModal, setModalUser } = React.useContext(AppGlobalContext)
 
-
-   React.useEffect(() => {
-      if (!isAuthenticated()) history.push('/')
-   }, [history])
-
    return (
       <Container>
          <Header />
@@ -27,7 +20,7 @@ export function Home() {
          <main>
             <section className="titleContainer">
                <h1 className="title">Navers</h1>
-               <Button>Adicionar Naver</Button>
+               <Button handleClick={() => history.push('/edit-user')}>Adicionar Naver</Button>
             </section>
 
             <section className="cardContainer">
